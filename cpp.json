@@ -1,0 +1,30 @@
+{
+	"Print to console": {
+		"prefix": "C",
+		"body": [
+			"#include<bits/stdc++.h>",
+			"",
+			"using namespace std;",
+			"",
+			"#define FOR(i,l,r) for(int i=l;i<=r;i++)",
+			"#define RFOR(i,l,r) for(int i=r;i>=l;i--)",
+			"#define p(x,y) pair<x,y>",
+			"#define mkp make_pair",
+			"",
+			"#ifdef DEBUG",
+			"#define cin fs",
+			"#endif ",
+			"int main()",
+			"{",
+			"#ifdef DEBUG",
+			"fstream fs(strcat(getpwd(),'/in',ios::in));",
+			"#endif ",
+			"    $0",
+			"    ",
+			"    return 0;",
+			"}"
+
+		],
+		"description": "Log output to console"
+	}
+}
