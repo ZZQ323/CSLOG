@@ -64,9 +64,9 @@ void VIP::add(int payment)
 
 int VIP::exchange(int getings)
 {
-	int ret=min(getings,scores)/100;
-	assert(exrate);
-	scores-=ret*100/exrate;
+	int ret=min(getings,scores)/exrate;
+	// assert(exrate);
+	scores-=ret*exrate;
 	return ret*100;
 }
 
@@ -79,13 +79,15 @@ void VIP::print()
 int main()
 {
 	#ifdef DEBUG
-		fstream fs(strcat(getpwd(),"/in",ios::in));
+		fstream fs;
+		fs.open("/workspaces/CSLOG/task/in",ios::in);
 	#endif 
+
 	// 创建一个基类对象指针
-	Member* pm;// ....其他变量自行编写
+	Member* pm=nullptr;// ....其他变量自行编写
 	int temp;
 	int id;	int scores;	string name;	
-	while(cin>>id>>scores>>name){
+	while(cin>>id>>name>>scores){
 		// 输入数据，创建普通会员对象mm
 		// 使用指针pm执行以下操作：
 		// 1、pm指向普通会员对象mm
@@ -104,8 +106,9 @@ int main()
 		// 1、pm指向贵宾会员对象vv
 		// 2、输入数据，通过pm执行积分累加和积分兑换
 		// 3、通过pm调用打印方法输出
-		cin>>id>>scores>>name;
-		Member vv(id,scores,name);
+		int vaddrate,vexrate;
+		cin>>id>>name>>scores>>vaddrate>>vexrate;
+		VIP vv(id,scores,name,vaddrate,vexrate);
 		pm=&vv;
 		cin>>temp;
 		pm->add(temp);
@@ -117,8 +120,9 @@ int main()
 	return 0;
 }
 
-
-
-
-
-
+/*
+1001 John 500
+244 300 
+8001 Jane 300 2 90
+100 420
+*/

@@ -1,3 +1,7 @@
 *.exe
 *.vscode
 *.zip
+*.in
+*.out
+*in
+*out
