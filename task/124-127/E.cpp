@@ -11,6 +11,11 @@ using namespace std;
 #define cin fs
 #endif 
 
+/*
+中国使用斤、两、钱来表示重量，其中1斤=10两，1两=10钱
+中国计重单位与克的关系为：1斤=500克，1两=50克，1钱=5克
+*/
+
 
 class CN; //提前声明
 class EN; //提前声明
@@ -34,23 +39,72 @@ public:
 class CN : public Weight
 {
     private:
-        int money;
-        int gram;
-        int kilos;
+        mutable int money;
+        mutable int gramm;
+        mutable int kilos;
     public:
-        void print(ostream& out)override{;}
+		CN(int a,int b,int c,int d, const char* const tk):Weight(tk){;}
+		//"<< <<"
+		void Convert(int var){
+			kilos=var/500;var%=500;
+			gramm=var/50;var%=50;
+			money=var/5;var%=5;
+			gram=var;
+		}
+		friend class EN;
+
+		CN& operator=(const EN &var);
+
+        void print(ostream& out)override{out<<kind<<":"<<kilos<<"斤"<<gramm<<"两"<<money<<"钱"<<gram<<"克\n";}
 };
 
 // 英国计重
+
+/*
+英国使用磅、盎司、打兰来表示重量，其中1磅=16盎司，1盎司=16打兰
+英国计重单位与克的关系为：1磅=512克，1盎司=32克，1打兰=2克
+*/
+
 class EN : public Weight
 {
     private:
-        int pound;
-        int angus;
-        int daelant;
+        mutable int pound;
+        mutable int angus;
+        mutable int daelant;
     public:
-        void print(ostream& out)override{;}
+		EN(int a,int b,int c,int d, const char* const tk):Weight(tk){;}
+		
+		void Convert(int var)
+		{
+			pound=var/512;var%=512;
+			angus=var/32;var%=32;
+			daelant=var/2;var%=2;
+			gram=var;
+		}
+
+		friend  class CN;
+
+		EN& operator=(const CN &var);
+
+        void print(ostream& out)override{out<<kind<<":"<<pound<<"磅"<<angus<<"盎司"<<daelant<<"打兰"<<gram<<"克\n";}
 };
+
+
+EN& EN::operator=(const CN &var)
+{
+	int temp;
+	temp=var.gram+var.kilos*500+var.gramm*50+var.money*5;
+	Convert(temp);
+	return *this;
+}
+
+CN& CN::operator=(const EN &var)
+{
+	int temp;
+	temp=var.pound*512+var.angus*32+var.daelant*2+var.gram;
+	Convert(temp);
+	return *this;
+}
 
 
 // 以全局函数方式重载输出运算符，代码3-5行....自行编写
@@ -66,15 +120,16 @@ int main()
 	CN cn(0, 0, 0, 0, "中国计重");
 	cin >> tw;
 	cn.Convert(tw); // 把输入的克数转成中国计重
-	cout << cn;
+	cn.print(cout);
 
 	// 创建英国计重类对象en
 	// 构造参数对应磅、盎司、打兰、克、类型，其中克和类型是对应基类属性gram和kind
 	EN en(0, 0, 0, 0, "英国计重");
 	cin >> tw;
 	en.Convert(tw); // 把输入的克数转成英国计重
-	cout << en;
+	// cout << en;
+	en.print(cout);
 	cn = en; // 把英国计重转成中国计重
-	cout << cn;
+	cn.print(cout);
 	return 0;
 }
